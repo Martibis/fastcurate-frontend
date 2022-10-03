@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const useFetch = (url) => {
+const useFetch = (url, token) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,8 +12,7 @@ const useFetch = (url) => {
     axios
       .get(url, {
         headers: {
-          network: process.env.REACT_APP_NETWORK,
-          signal: controller.signal,
+          Authorization: token,
         },
       })
       .then((resp) => {
@@ -27,7 +26,7 @@ const useFetch = (url) => {
         setLoading(false);
       });
     controller.abort();
-  }, [url]);
+  }, [url, token]);
 
   return { data, loading, error };
 };
