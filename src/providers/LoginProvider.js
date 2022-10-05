@@ -13,41 +13,62 @@ export function useAuthorizationContext() {
 }
 
 const LoginProvider = ({ children }) => {
-  const [keychain, setKeychain] = useState();
-  const [installed, setInstalled] = useState(false);
+  const [installed, setInstalled] = useState();
   const [username, setUsername] = useState();
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [token, setToken] = useState();
   const [loggedIn, setLoggedIn] = useState(false);
   const [connecting, setConnecting] = useState(false);
 
-  async function requestLogin(username) {
-    if (installed) {
-      axios
-        .post(process.env.REACT_APP_FC_API + "/memo", { username: username })
+  async function requestLogin(usernameIn) {
+    let username = usernameIn.replace(/@/g, "");
+    let keychainInstalled;
+    let keychainAccess;
+
+    if (window?.hive_keychain) {
+      keychainInstalled = true;
+      keychainAccess = window.hive_keychain;
+      setInstalled(keychainInstalled);
+    }
+
+    if (keychainInstalled) {
+      await axios
+        .post(process.env.REACT_APP_FC_API + "/auth/memo", {
+          username: username,
+        })
         .then((resp) => {
           try {
-            keychain.requestVerifyKey(
+            console.log(resp);
+            keychainAccess.requestVerifyKey(
               username,
-              resp.data.memo,
+              resp.data.message,
               "Posting",
               (keychain_response) => {
                 if (keychain_response.success === true) {
+                  console.log(keychain_response);
                   axios
-                    .post(process.env.REACT_APP_FC_API + "/login", {
+                    .post(process.env.REACT_APP_FC_API + "/auth/login", {
                       username: username,
                       encrypted_username: keychain_response.result,
                     })
                     .then((login_response) => {
+                      console.log(login_response);
                       if (login_response.status === 200) {
-                        setToken(login_response.data.token);
                         localStorage.removeItem("token");
-                        localStorage.setItem("token", login_response.data.token);
+                        localStorage.setItem(
+                          "token",
+                          login_response.data.token
+                        );
+                        setToken(login_response.data.token);
+                        setUsername(username);
+                        setLoggedIn(true);
                       }
                     });
                 }
               }
             );
-          } catch (e) {}
+          } catch (e) {
+            console.log(e);
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -57,39 +78,32 @@ const LoginProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    setConnecting(true);
-    if (window?.hive_keychain) {
-      setInstalled(true);
-      setKeychain(window.hive_keychain);
-    } else {
-      setInstalled(false);
+    localStorage.removeItem("token");
+    if (token === undefined) {
+      let jwt = localStorage.getItem("token");
+      setToken(jwt);
     }
+
     if (token) {
-      try {
-        axios
-          .get(process.env.REACT_APP_FC_API + "/verify_token", {
-            headers: {
-              Authorization: token,
-            },
-          })
-          .then((resp) => {
-            if (resp.status === 200) {
-              setUsername(resp.data.username);
-              setLoggedIn(true);
-            } else {
-              //unsuccessfully verified token
-              console.log(resp.status);
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          })
-          .finally(() => {
-            setConnecting(false);
-          });
-      } catch (e) {
-        console.log(e);
-      }
+      setConnecting(true);
+      axios
+        .get(process.env.REACT_APP_FC_API + "/auth/verify_token", {
+          headers: {
+            Authorization: token,
+          },
+        })
+        .then((resp) => {
+          if (resp.status === 200) {
+            setUsername(resp.data.username);
+            setLoggedIn(true);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          setConnecting(false);
+        });
     }
   }, [token]);
 
