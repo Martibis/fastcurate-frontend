@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import LoginProvider from "./providers/LoginProvider";
 import LoadingPage from "./pages/LoadingPage";
+import ReactTooltip from "react-tooltip";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const NotFound = lazy(() => import("./pages/NotFoundPage"));
@@ -21,6 +22,7 @@ function App() {
           </Suspense>
         </BrowserRouter>
       </div>
+      <ReactTooltip />
     </LoginProvider>
   );
 }

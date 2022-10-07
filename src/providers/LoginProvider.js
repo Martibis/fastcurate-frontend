@@ -78,13 +78,12 @@ const LoginProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    localStorage.removeItem("token");
     if (token === undefined) {
       let jwt = localStorage.getItem("token");
       setToken(jwt);
     }
 
-    if (token) {
+    if (token !== undefined) {
       setConnecting(true);
       axios
         .get(process.env.REACT_APP_FC_API + "/auth/verify_token", {
@@ -94,7 +93,7 @@ const LoginProvider = ({ children }) => {
         })
         .then((resp) => {
           if (resp.status === 200) {
-            setUsername(resp.data.username);
+            setUsername(resp.data.data.username);
             setLoggedIn(true);
           }
         })
