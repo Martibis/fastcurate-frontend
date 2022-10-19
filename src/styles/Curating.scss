@@ -82,6 +82,17 @@
     max-width: 750px;
     overflow-wrap: break-word;
 
+    .ban-reason {
+        margin-top: 0.5rem;
+        width: 100%;
+        background-color: rgb(246, 46, 46);
+        color: #ffffff;
+        box-sizing: border-box;
+        padding: 0.5rem;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
     * {
         overflow-wrap: break-word;
     }
