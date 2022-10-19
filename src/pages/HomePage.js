@@ -20,8 +20,7 @@ const HomePage = () => {
     setCurrentMode(newMode);
     if (currentMode !== newMode) {
       await new Promise(async (res, rej) => {
-        console.log(postData);
-        if (postData.post.id) {
+        if (postData?.post?.id) {
           await resetPosts(false);
           res();
         } else {
