@@ -7,6 +7,7 @@ import LoadingPage from "./LoadingPage";
 
 import axios from "axios";
 import Curating from "../components/Curating";
+import Tools from "../components/Tools";
 
 const HomePage = () => {
   const loginData = useAuthorizationContext();
@@ -15,9 +16,21 @@ const HomePage = () => {
   const [loading, setLoading] = useState(false);
   const [postData, setPostData] = useState();
 
-  function changeMode(newMode) {
+  async function changeMode(newMode) {
+    setCurrentMode(newMode);
     if (currentMode !== newMode) {
-      setCurrentMode(newMode);
+      await new Promise(async (res, rej) => {
+        console.log(postData);
+        if (postData.post.id) {
+          await resetPosts(false);
+          res();
+        } else {
+          res();
+        }
+      });
+      if (newMode === 1) {
+        await getPost(false);
+      }
     }
   }
 
@@ -26,14 +39,16 @@ const HomePage = () => {
     await axios
       .post(
         process.env.REACT_APP_FC_API + "/fastcurate/reset_curation",
-        all ? {} : { id: postData.id },
+        all ? {} : { id: postData.post.id },
         {
           headers: {
             Authorization: loginData.token,
           },
         }
       )
-      .then((resp) => {})
+      .then((resp) => {
+        setPostData();
+      })
       .catch((err) => {
         console.log(err);
       })
@@ -92,23 +107,9 @@ const HomePage = () => {
 
   useEffect(() => {
     if (loginData.loggedIn) {
-      if (currentMode === 1) {
-        getPost(false);
-      } else {
-        if (currentMode === 2) {
-          //go to writing
-        } else {
-          if (currentMode === 3) {
-            resetPosts(true);
-          } else {
-            if (currentMode === 4) {
-              resetPosts(false);
-            }
-          }
-        }
-      }
+      getPost(false);
     }
-  }, [loginData.loggedIn, currentMode]);
+  }, [loginData.loggedIn]);
 
   return (
     <div id="home-page">
@@ -132,7 +133,8 @@ const HomePage = () => {
                     window.location.reload();
                   }}
                 >
-                  {loginData.username}
+                  👋
+                  {" " + loginData.username}
                 </b>
                 {" | "}
                 <b>{postData?.count?.toString()}</b> {" posts | "}
@@ -145,7 +147,7 @@ const HomePage = () => {
                     changeMode(1);
                   }}
                 >
-                  Curate
+                  📰
                 </p>
                 <p
                   className={currentMode === 2 ? "active" : ""}
@@ -153,7 +155,7 @@ const HomePage = () => {
                     changeMode(2);
                   }}
                 >
-                  Write
+                  ✏️
                 </p>
                 <p
                   className={currentMode === 3 ? "active" : ""}
@@ -161,7 +163,7 @@ const HomePage = () => {
                     changeMode(3);
                   }}
                 >
-                  ⚠
+                  🔧
                 </p>
                 <p
                   className={currentMode === 4 ? "active" : ""}
@@ -169,7 +171,7 @@ const HomePage = () => {
                     changeMode(4);
                   }}
                 >
-                  x
+                  ❌
                 </p>
               </div>
             </div>
@@ -182,8 +184,12 @@ const HomePage = () => {
               loading={loading}
             />
           ) : currentMode === 2 ? (
+            /* WRITING MODE */
             <div></div>
-          ) : currentMode === 3 || currentMode === 4 ? (
+          ) : currentMode === 3 ? (
+            /* TOOLS MODE */
+            <Tools />
+          ) : currentMode === 4 ? (
             <div className="safe-to-close">
               <p>You can now safely close this page.</p>
             </div>

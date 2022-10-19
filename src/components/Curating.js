@@ -41,15 +41,15 @@ const Curating = (props) => {
                   props?.post?.banReason +
                   " ⚠</p>\n\n"
                 : "" +
-                  "Written by [@" +
-                  props?.post?.username +
-                  "](https://peakd.com/@" +
-                  props?.post?.username +
-                  ")\n\n# [" +
+                  "# [" +
                   props?.post?.postTitle +
                   "](" +
                   props?.post?.postLink +
-                  ")\n\n[View on Pinmapple](https://pinmapple.com/p/" +
+                  ")\n\nWritten by [@" +
+                  props?.post?.username +
+                  "](https://peakd.com/@" +
+                  props?.post?.username +
+                  ")\n\n[View this post on Pinmapple](https://pinmapple.com/p/" +
                   props?.post?.postPermLink +
                   ")\n\n" +
                   props?.post?.postBody
