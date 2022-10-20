@@ -8,6 +8,7 @@ import LoadingPage from "./LoadingPage";
 import axios from "axios";
 import Curating from "../components/Curating";
 import Tools from "../components/Tools";
+import Writing from "../components/Writing";
 
 const HomePage = () => {
   const loginData = useAuthorizationContext();
@@ -15,6 +16,9 @@ const HomePage = () => {
   const [currentMode, setCurrentMode] = useState(1);
   const [loading, setLoading] = useState(false);
   const [postData, setPostData] = useState();
+  const [postsForDigestQ0, setPostsForDigestQ0] = useState([]);
+  const [postsForDigestQ1, setPostsForDigestQ1] = useState([]);
+  const [postsForDigestQ2, setPostsForDigestQ2] = useState([]);
 
   async function changeMode(newMode) {
     setCurrentMode(newMode);
@@ -29,6 +33,10 @@ const HomePage = () => {
       });
       if (newMode === 1) {
         await getPost(false);
+      } else {
+        if (newMode === 2) {
+          await getPostsForDigest();
+        }
       }
     }
   }
@@ -46,7 +54,7 @@ const HomePage = () => {
         }
       )
       .then((resp) => {
-        setPostData();
+        setPostData({ count: postData?.count, hoursleft: postData?.hoursleft });
       })
       .catch((err) => {
         console.log(err);
@@ -104,6 +112,52 @@ const HomePage = () => {
     }
   }
 
+  async function getPostsForDigest() {
+    if (loading === false) {
+      setLoading(true);
+      await axios
+        .get(process.env.REACT_APP_FC_API + "/fastcurate/digest_ready", {
+          headers: {
+            Authorization: loginData.token,
+          },
+        })
+        .then((resp) => {
+          let posts = resp?.data;
+          console.log(posts);
+          console.log(posts.length);
+          let postsQ0 = [];
+          let postsQ1 = [];
+          let postsQ2 = [];
+          for (let post of posts) {
+            if (post?.postQuality === 0 || post?.postQuality === null) {
+              postsQ0.push(post);
+            } else {
+              if (post?.postQuality === 2) {
+                postsQ2.push(post);
+              } else {
+                if (post?.postQuality === 1) {
+                  postsQ1.push(post);
+                }
+              }
+            }
+          }
+          console.log(postsQ0.length);
+          console.log(postsQ1.length);
+          console.log(postsQ2.length);
+
+          setPostsForDigestQ0(postsQ0);
+          setPostsForDigestQ2(postsQ2);
+          setPostsForDigestQ1(postsQ1);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }
+
   useEffect(() => {
     if (loginData.loggedIn) {
       getPost(false);
@@ -126,8 +180,8 @@ const HomePage = () => {
               <p className="info-message">
                 <b
                   className="username"
-                  onClick={() => {
-                    updatePosts([{ id: postData.id, isCurated: 0 }]);
+                  onClick={async () => {
+                    await resetPosts(false);
                     localStorage.removeItem("token");
                     window.location.reload();
                   }}
@@ -184,7 +238,13 @@ const HomePage = () => {
             />
           ) : currentMode === 2 ? (
             /* WRITING MODE */
-            <div></div>
+            <Writing
+              updatePosts={updatePosts}
+              loading={loading}
+              postsQ0={postsForDigestQ0}
+              postsQ2={postsForDigestQ2}
+              postsQ1={postsForDigestQ1}
+            />
           ) : currentMode === 3 ? (
             /* TOOLS MODE */
             <Tools />

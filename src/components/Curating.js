@@ -15,15 +15,16 @@ const Curating = (props) => {
   const [postInfo, setPostInfo] = useState();
 
   useEffect(() => {
-    setPostQuality(props?.postQuality);
-    setPostInfo(props?.postInfo);
+    if (props?.post !== undefined && !props?.loading) {
+      console.log("IN HERE");
+      console.log(props?.post);
+      setPostQuality(props?.post?.postQuality);
+      setPostInfo(props?.post?.postInfo);
+      setOpenModal(
+        props?.post?.postQuality === 1 || props?.post?.postQuality === 2
+      );
+    }
   }, [props]);
-
-  function resetState() {
-    setOpenModal(false);
-    setPostQuality();
-    setPostInfo();
-  }
 
   return (
     <div className="fastcurate-inner">
@@ -73,6 +74,7 @@ const Curating = (props) => {
         {openModal ? (
           <div className="post-info">
             <input
+              value={postInfo}
               type="text"
               onKeyUpCapture={async (e) => {
                 if (e.key === "Enter") {
@@ -84,7 +86,6 @@ const Curating = (props) => {
                       postInfo: postInfo,
                     },
                   ]);
-                  resetState();
                   await props?.getPost(false);
                 }
               }}
@@ -104,7 +105,6 @@ const Curating = (props) => {
           <p
             onClick={async () => {
               await props?.updatePosts([{ id: props?.post.id, isCurated: 0 }]);
-              resetState();
               await props?.getPost(true);
             }}
           >
@@ -136,6 +136,7 @@ const Curating = (props) => {
           </p>
           <p
             onClick={async () => {
+              setOpenModal(false);
               await props?.updatePosts([
                 {
                   id: props?.post.id,
@@ -144,7 +145,6 @@ const Curating = (props) => {
                   postInfo: postInfo,
                 },
               ]);
-              resetState();
               await props?.getPost(false);
             }}
           >
