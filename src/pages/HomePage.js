@@ -20,6 +20,58 @@ const HomePage = () => {
   const [postsForDigestQ1, setPostsForDigestQ1] = useState([]);
   const [postsForDigestQ2, setPostsForDigestQ2] = useState([]);
 
+  async function updatePostQuality(oldQ, newQ, post) {
+    let updatedPost = post;
+    updatedPost.postQuality = newQ;
+
+    await new Promise((res, rej) => {
+      if (oldQ === 0 || oldQ === null) {
+        setPostsForDigestQ0(
+          postsForDigestQ0.filter(function (p) {
+            return p.id !== updatedPost.id;
+          })
+        );
+        res();
+      } else {
+        if (oldQ === 1) {
+          setPostsForDigestQ1(
+            postsForDigestQ1.filter(function (p) {
+              return p.id !== updatedPost.id;
+            })
+          );
+          updatedPost.topThreeOrder = null;
+          res();
+        } else {
+          if (oldQ === 2) {
+            setPostsForDigestQ2(
+              postsForDigestQ2.filter(function (p) {
+                return p.id !== updatedPost.id;
+              })
+            );
+            res();
+          } else {
+            console.log("Something went wrong");
+            rej();
+          }
+        }
+      }
+    });
+    if (newQ === 0 || newQ === null) {
+      setPostsForDigestQ0([...postsForDigestQ0, updatedPost]);
+    } else {
+      if (newQ === 1) {
+        setPostsForDigestQ1([...postsForDigestQ1, updatedPost]);
+      } else {
+        if (newQ === 2) {
+          setPostsForDigestQ2([...postsForDigestQ2, updatedPost]);
+        }
+      }
+    }
+    await updatePosts([
+      { id: updatedPost.id, postQuality: updatedPost.postQuality },
+    ]);
+  }
+
   async function changeMode(newMode) {
     setCurrentMode(newMode);
     if (currentMode !== newMode) {
@@ -141,10 +193,6 @@ const HomePage = () => {
               }
             }
           }
-          console.log(postsQ0.length);
-          console.log(postsQ1.length);
-          console.log(postsQ2.length);
-
           setPostsForDigestQ0(postsQ0);
           setPostsForDigestQ2(postsQ2);
           setPostsForDigestQ1(postsQ1);
@@ -244,6 +292,7 @@ const HomePage = () => {
               postsQ0={postsForDigestQ0}
               postsQ2={postsForDigestQ2}
               postsQ1={postsForDigestQ1}
+              updatePostQuality={updatePostQuality}
             />
           ) : currentMode === 3 ? (
             /* TOOLS MODE */

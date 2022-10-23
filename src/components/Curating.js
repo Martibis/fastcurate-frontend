@@ -37,23 +37,23 @@ const Curating = (props) => {
           <ReactMarkdown
             className="post-body"
             children={
-              props?.post?.banReason != null
+              (props?.post?.banReason != null
                 ? "<p class='ban-reason'>⚠ " +
                   props?.post?.banReason +
                   " ⚠</p>\n\n"
-                : "" +
-                  "# [" +
-                  props?.post?.postTitle +
-                  "](" +
-                  props?.post?.postLink +
-                  ")\n\nWritten by [@" +
-                  props?.post?.username +
-                  "](https://peakd.com/@" +
-                  props?.post?.username +
-                  ")\n\n[View this post on Pinmapple](https://pinmapple.com/p/" +
-                  props?.post?.postPermLink +
-                  ")\n\n" +
-                  props?.post?.postBody
+                : "") +
+              "# [" +
+              props?.post?.postTitle +
+              "](" +
+              props?.post?.postLink +
+              ")\n\nWritten by [@" +
+              props?.post?.username +
+              "](https://peakd.com/@" +
+              props?.post?.username +
+              ")\n\n[View this post on Pinmapple](https://pinmapple.com/p/" +
+              props?.post?.postPermLink +
+              ")\n\n" +
+              props?.post?.postBody
             }
             linkTarget="_blank"
             disallowedElements={["liketuimages"]}

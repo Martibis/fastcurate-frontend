@@ -1,0 +1,81 @@
+@import "Variables.scss";
+#writing-digest {
+    margin-top: 4rem;
+    background-color: $very-light-gray;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .inner-writing {
+        width: 90%;
+        max-width: 750px;
+        background-color: #ffffff;
+        box-sizing: border-box;
+        padding: 2rem;
+        h2 {
+            width: 100%;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+        .post-for-digest {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1rem;
+            .main-info {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                .img-link {
+                    display: flex;
+                    flex-direction: row;
+                }
+                a {
+                    color: rgb(32, 147, 242);
+                    cursor: pointer;
+                }
+                .arrows {
+                    display: flex;
+                    flex-direction: row;
+                    .arrow-button,
+                    .winner-button {
+                        background-color: rgba(0, 0, 0, 0.8);
+                        color: white;
+                        box-sizing: border-box;
+                        padding: 0.5rem 0.9rem;
+                        cursor: pointer;
+                        margin: 0.1rem;
+                    }
+                    .arrow-button:hover,
+                    .winner-button:hover {
+                        background-color: #000000;
+                    }
+                    .winner-button {
+                        background-color: $very-light-gray;
+                        padding: 0.5rem;
+                    }
+                    .winner-button.active {
+                        background-color: #000000;
+                    }
+                }
+            }
+            .input-fields {
+                display: flex;
+                flex-direction: column;
+                input {
+                    height: 2.5rem;
+                    box-sizing: border-box;
+                    padding: 0.5rem 1rem;
+                    margin-bottom: 0.5rem;
+                }
+                textarea {
+                    height: 7.5rem;
+                    box-sizing: border-box;
+                    padding: 0.5rem 1rem;
+                }
+            }
+        }
+    }
+}
