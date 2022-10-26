@@ -72,6 +72,85 @@ const HomePage = () => {
     ]);
   }
 
+  async function updatePostInfo(post, input) {
+    let updatedPost = post;
+    post.postInfo = input;
+    if (updatedPost.postQuality === 0 || updatedPost.postQuality === null) {
+      setPostsForDigestQ0(
+        postsForDigestQ0.map((p) => (p.id !== updatedPost.id ? p : updatedPost))
+      );
+    } else {
+      if (updatedPost.postQuality === 1) {
+        setPostsForDigestQ1(
+          postsForDigestQ1.map((p) =>
+            p.id !== updatedPost.id ? p : updatedPost
+          )
+        );
+      } else {
+        if (updatedPost.postQuality === 2) {
+          setPostsForDigestQ2(
+            postsForDigestQ2.map((p) =>
+              p.id !== updatedPost.id ? p : updatedPost
+            )
+          );
+        } else {
+          console.log("Something went wrong");
+        }
+      }
+    }
+    await updatePosts([{ id: updatedPost.id, postInfo: updatedPost.postInfo }]);
+  }
+
+  async function updateTopThreeOrder(postToChange, order) {
+    let newPostsForDigestQ1 = postsForDigestQ1;
+    let postsToUpdate = [];
+
+    for (let post of newPostsForDigestQ1) {
+      if (post.topThreeOrder === order) {
+        postsToUpdate.push({ id: post.id, topThreeOrder: 0 });
+        post.topThreeOrder = 0;
+      }
+      if (post.id === postToChange.id) {
+        post.topThreeOrder = order;
+        postsToUpdate.push({ id: post.id, topThreeOrder: order });
+      }
+    }
+
+    setPostsForDigestQ1(newPostsForDigestQ1);
+    await updatePosts(postsToUpdate);
+  }
+
+  async function updateFeaturedText(post, input) {
+    let updatedPost = post;
+    post.featuredText = input;
+    if (updatedPost.postQuality === 0 || updatedPost.postQuality === null) {
+      setPostsForDigestQ0(
+        postsForDigestQ0.map((p) => (p.id !== updatedPost.id ? p : updatedPost))
+      );
+    } else {
+      if (updatedPost.postQuality === 1) {
+        setPostsForDigestQ1(
+          postsForDigestQ1.map((p) =>
+            p.id !== updatedPost.id ? p : updatedPost
+          )
+        );
+      } else {
+        if (updatedPost.postQuality === 2) {
+          setPostsForDigestQ2(
+            postsForDigestQ2.map((p) =>
+              p.id !== updatedPost.id ? p : updatedPost
+            )
+          );
+        } else {
+          console.log("Something went wrong");
+        }
+      }
+    }
+    await updatePosts([
+      { id: updatedPost.id, featuredText: updatedPost.featuredText },
+    ]);
+  }
+
   async function changeMode(newMode) {
     setCurrentMode(newMode);
     if (currentMode !== newMode) {
@@ -175,8 +254,6 @@ const HomePage = () => {
         })
         .then((resp) => {
           let posts = resp?.data;
-          console.log(posts);
-          console.log(posts.length);
           let postsQ0 = [];
           let postsQ1 = [];
           let postsQ2 = [];
@@ -193,6 +270,7 @@ const HomePage = () => {
               }
             }
           }
+          console.log(postsQ0[0]);
           setPostsForDigestQ0(postsQ0);
           setPostsForDigestQ2(postsQ2);
           setPostsForDigestQ1(postsQ1);
@@ -293,6 +371,9 @@ const HomePage = () => {
               postsQ2={postsForDigestQ2}
               postsQ1={postsForDigestQ1}
               updatePostQuality={updatePostQuality}
+              updateFeaturedText={updateFeaturedText}
+              updatePostInfo={updatePostInfo}
+              updateTopThreeOrder={updateTopThreeOrder}
             />
           ) : currentMode === 3 ? (
             /* TOOLS MODE */

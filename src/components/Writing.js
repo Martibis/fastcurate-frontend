@@ -1,9 +1,19 @@
 import PostForDigest from "./PostForDigest";
 import "../styles/Writing.scss";
+import LoadingPage from "../pages/LoadingPage";
 
 const Writing = (props) => {
   function updatePostQuality(newQ, oldQ, post) {
     props.updatePostQuality(newQ, oldQ, post);
+  }
+  function updateFeaturedText(post, input) {
+    props.updateFeaturedText(post, input);
+  }
+  function updatePostInfo(post, input) {
+    props.updatePostInfo(post, input);
+  }
+  function updateTopThreeOrder(post, order) {
+    props.updateTopThreeOrder(post, order);
   }
   return (
     <div id="writing-digest">
@@ -15,6 +25,9 @@ const Writing = (props) => {
               post={p}
               key={p.id}
               updatePostQuality={updatePostQuality}
+              updateFeaturedText={updateFeaturedText}
+              updatePostInfo={updatePostInfo}
+              updateTopThreeOrder={updateTopThreeOrder}
             />
           );
         })}
@@ -25,6 +38,9 @@ const Writing = (props) => {
               post={p}
               key={p.id}
               updatePostQuality={updatePostQuality}
+              updateFeaturedText={updateFeaturedText}
+              updatePostInfo={updatePostInfo}
+              updateTopThreeOrder={updateTopThreeOrder}
             />
           );
         })}
@@ -35,6 +51,9 @@ const Writing = (props) => {
               post={p}
               key={p.id}
               updatePostQuality={updatePostQuality}
+              updateFeaturedText={updateFeaturedText}
+              updatePostInfo={updatePostInfo}
+              updateTopThreeOrder={updateTopThreeOrder}
             />
           );
         })}

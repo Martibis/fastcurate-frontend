@@ -16,8 +16,6 @@ const Curating = (props) => {
 
   useEffect(() => {
     if (props?.post !== undefined && !props?.loading) {
-      console.log("IN HERE");
-      console.log(props?.post);
       setPostQuality(props?.post?.postQuality);
       setPostInfo(props?.post?.postInfo);
       setOpenModal(

@@ -27,17 +27,56 @@ const PostForDigest = (props) => {
         </div>
         <div className="arrows">
           {props.post.postQuality === 1 ? (
-            <p className="winner-button">🥇</p>
+            <p
+              className={
+                "winner-button " +
+                (props.post.topThreeOrder === 1 ? "active" : "")
+              }
+              onClick={async () => {
+                await props.updateTopThreeOrder(
+                  props.post,
+                  props.post.topThreeOrder === 1 ? 0 : 1
+                );
+              }}
+            >
+              🥇
+            </p>
           ) : (
             <></>
           )}
           {props.post.postQuality === 1 ? (
-            <p className="winner-button">🥈</p>
+            <p
+              className={
+                "winner-button " +
+                (props.post.topThreeOrder === 2 ? "active" : "")
+              }
+              onClick={async () => {
+                await props.updateTopThreeOrder(
+                  props.post,
+                  props.post.topThreeOrder === 2 ? 0 : 2
+                );
+              }}
+            >
+              🥈
+            </p>
           ) : (
             <></>
           )}
           {props.post.postQuality === 1 ? (
-            <p className="winner-button">🥉</p>
+            <p
+              className={
+                "winner-button " +
+                (props.post.topThreeOrder === 3 ? "active" : "")
+              }
+              onClick={async () => {
+                await props.updateTopThreeOrder(
+                  props.post,
+                  props.post.topThreeOrder === 3 ? 0 : 3
+                );
+              }}
+            >
+              🥉
+            </p>
           ) : (
             <></>
           )}
@@ -88,6 +127,7 @@ const PostForDigest = (props) => {
           <input
             value={postInfo}
             onChange={(e) => setPostInfo(e.target.value)}
+            onBlur={(e) => props.updatePostInfo(props.post, postInfo)}
           />
         ) : (
           <></>
@@ -96,6 +136,7 @@ const PostForDigest = (props) => {
           <textarea
             value={featuredText}
             onChange={(e) => setFeaturedText(e.target.value)}
+            onBlur={(e) => props.updateFeaturedText(props.post, featuredText)}
           />
         ) : (
           <></>
