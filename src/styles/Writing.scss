@@ -6,12 +6,42 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    .writing-buttons {
+        width: 90%;
+        max-width: calc(750px + 1rem);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
+        margin: 1rem 0;
+    }
+    .preview-digest-button,
+    .restart-curation-button {
+        margin: 0.5rem;
+        background-color: black;
+        color: white;
+        box-sizing: border-box;
+        padding: 0.75rem 3rem;
+        cursor: pointer;
+        opacity: 0.8;
+    }
+    .preview-digest-button:hover,
+    .restart-curation-button:hover {
+        opacity: 1;
+    }
     .inner-writing {
         width: 90%;
         max-width: 750px;
         background-color: #ffffff;
         box-sizing: border-box;
         padding: 2rem;
+        .intro-textara {
+            width: 100%;
+            margin-bottom: 1rem;
+            height: 7.5rem;
+            box-sizing: border-box;
+            padding: 0.5rem 1rem;
+        }
         h2 {
             width: 100%;
             font-weight: bold;

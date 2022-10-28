@@ -1,0 +1,21 @@
+#digest-preview {
+    display: flex;
+    justify-content: center;
+    .post-body {
+        width: 50%;
+    }
+    .markdown-raw-view {
+        width: 50%;
+        line-height: 1.3;
+        background-color: rgb(255, 255, 223);
+        box-sizing: border-box;
+        padding: 4rem 2rem;
+        //width: 90%;
+        max-width: 750px;
+        overflow-wrap: break-word;
+        cursor: pointer;
+    }
+    .markdown-raw-view:active {
+        background-color: rgb(255, 255, 191);
+    }
+}

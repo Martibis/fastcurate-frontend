@@ -19,6 +19,8 @@ const HomePage = () => {
   const [postsForDigestQ0, setPostsForDigestQ0] = useState([]);
   const [postsForDigestQ1, setPostsForDigestQ1] = useState([]);
   const [postsForDigestQ2, setPostsForDigestQ2] = useState([]);
+  const [tdIntro, setTdIntro] = useState();
+  const [digestPreview, setDigestPreview] = useState();
 
   async function updatePostQuality(oldQ, newQ, post) {
     let updatedPost = post;
@@ -242,6 +244,49 @@ const HomePage = () => {
         });
     }
   }
+  async function updatePostIntro(intro) {
+    setLoading(true);
+    await axios
+      .post(
+        process.env.REACT_APP_FC_API + "/auth/update_intro",
+        { intro: intro },
+        {
+          headers: {
+            Authorization: loginData.token,
+          },
+        }
+      )
+      .then((resp) => {})
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }
+
+  async function startNewDigest() {
+    setLoading(true);
+    await axios
+      .post(
+        process.env.REACT_APP_FC_API + "/fastcurate/set_digested",
+        {},
+        {
+          headers: {
+            Authorization: loginData.token,
+          },
+        }
+      )
+      .then((resp) => {})
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+        setDigestPreview("");
+        changeMode(4);
+      });
+  }
 
   async function getPostsForDigest() {
     if (loading === false) {
@@ -253,7 +298,7 @@ const HomePage = () => {
           },
         })
         .then((resp) => {
-          let posts = resp?.data;
+          let posts = resp?.data?.posts;
           let postsQ0 = [];
           let postsQ1 = [];
           let postsQ2 = [];
@@ -270,7 +315,7 @@ const HomePage = () => {
               }
             }
           }
-          console.log(postsQ0[0]);
+          setTdIntro(resp?.data?.intro);
           setPostsForDigestQ0(postsQ0);
           setPostsForDigestQ2(postsQ2);
           setPostsForDigestQ1(postsQ1);
@@ -282,6 +327,25 @@ const HomePage = () => {
           setLoading(false);
         });
     }
+  }
+
+  async function getDigestPreview() {
+    setLoading(true);
+    await axios
+      .get(process.env.REACT_APP_FC_API + "/fastcurate/digest_preview", {
+        headers: {
+          Authorization: loginData.token,
+        },
+      })
+      .then((resp) => {
+        setDigestPreview(resp?.data?.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   useEffect(() => {
@@ -374,6 +438,12 @@ const HomePage = () => {
               updateFeaturedText={updateFeaturedText}
               updatePostInfo={updatePostInfo}
               updateTopThreeOrder={updateTopThreeOrder}
+              updatePostIntro={updatePostIntro}
+              tdIntro={tdIntro}
+              setTdIntro={setTdIntro}
+              getDigestPreview={getDigestPreview}
+              digestPreview={digestPreview}
+              startNewDigest={startNewDigest}
             />
           ) : currentMode === 3 ? (
             /* TOOLS MODE */
