@@ -58,14 +58,14 @@ const Curating = (props) => {
               props?.post?.postLink +
               ")\n\n Posted "+
               moment(props?.post?.postDate).fromNow()+
-              "\n\n"+
+              " | "+
               countContentWords(props?.post?.postBody)+
               " Words"+
-              "\n\nWritten by [@" +
+              " | Written by [@" +
               props?.post?.username +
               "](https://peakd.com/@" +
               props?.post?.username +
-              ")\n\n[View this post on Pinmapple](https://pinmapple.com/p/" +
+              ") | [View this post on Pinmapple](https://pinmapple.com/p/" +
               props?.post?.postPermLink +
               ")\n\n" +
               props?.post?.postBody

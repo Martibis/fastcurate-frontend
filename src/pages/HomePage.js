@@ -187,7 +187,7 @@ const HomePage = () => {
         }
       )
       .then((resp) => {
-        setPostData({ count: postData?.count, hoursleft: postData?.hoursleft });
+        setPostData({ countCurated: postData?.countCurated, countLeft: postData?.countLeft, hoursleft: postData?.hoursleft });
       })
       .catch((err) => {
         console.log(err);
@@ -380,7 +380,8 @@ const HomePage = () => {
                   {" " + loginData.username}
                 </b>
                 {" | "}
-                <b>{postData?.count?.toString()}</b> {" posts | "}
+                <b>{postData?.countCurated?.toString()}</b> {" posts curated | "}
+                <b>{postData?.countLeft?.toString()}</b> {" posts left | "}
                 <b>{postData?.hoursleft?.toString()}</b> {" hours"}
               </p>
               <div className="current-mode">
