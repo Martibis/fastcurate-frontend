@@ -18,14 +18,21 @@ const Writing = (props) => {
     props.updateTopThreeOrder(post, order);
   }
 
+  function isDigestValid() {
+    return props.tdIntro && props?.postsQ1.length === 3;
+  }
+
   return (
     <div id="writing-digest">
       <div className="writing-buttons">
         <p
-          className="preview-digest-button"
+          className={`preview-digest-button ${isDigestValid() ? '' : 'disabled'}`}
+          data-tip={isDigestValid() ? '' : 'disabled'}
           onClick={async () => {
-            setPreviewDigest(!previewDigest);
-            await props.getDigestPreview();
+            if(isDigestValid()){
+              setPreviewDigest(!previewDigest);
+              await props.getDigestPreview();
+            }
           }}
         >
           {previewDigest ? "Back" : "Preview digest"}
@@ -42,6 +49,9 @@ const Writing = (props) => {
         ) : (
           <></>
         )}
+      </div>
+      <div className="error-hint-wrapper">
+        <p className="error-hint">To preview digest make sure intro is filled and top 3 posts are selected!</p>
       </div>
       {previewDigest ? (
         <DigestPreview digestPreview={props.digestPreview} />

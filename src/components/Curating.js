@@ -8,11 +8,23 @@ import rehypeSanitize from "rehype-sanitize";
 import rehypeStringify from "rehype-stringify";
 import "../styles/Curating.scss";
 import LoadingPage from "../pages/LoadingPage";
+import moment from 'moment';
+import { marked } from 'marked';
+import { htmlToText } from 'html-to-text';
 
 const Curating = (props) => {
   const [openModal, setOpenModal] = useState(false);
   const [postQuality, setPostQuality] = useState();
   const [postInfo, setPostInfo] = useState();
+
+  const countContentWords = (str) => {
+    if(str) {
+      const html = marked(str);
+      const text = htmlToText(html);
+      return text.split(/\s+/).length;
+    }else
+    return '';
+  }
 
   useEffect(() => {
     if (props?.post !== undefined && !props?.loading) {
@@ -44,7 +56,12 @@ const Curating = (props) => {
               props?.post?.postTitle +
               "](" +
               props?.post?.postLink +
-              ")\n\nWritten by [@" +
+              ")\n\n Posted "+
+              moment(props?.post?.postDate).fromNow()+
+              "\n\n"+
+              countContentWords(props?.post?.postBody)+
+              " Words"+
+              "\n\nWritten by [@" +
               props?.post?.username +
               "](https://peakd.com/@" +
               props?.post?.username +
