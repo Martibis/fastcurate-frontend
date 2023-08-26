@@ -22,6 +22,8 @@ const HomePage = () => {
   const [tdIntro, setTdIntro] = useState();
   const [digestPreview, setDigestPreview] = useState();
 
+  const [tdNumber, setTdNumber] = useState();
+
   async function updatePostQuality(oldQ, newQ, post) {
     let updatedPost = post;
     updatedPost.postQuality = newQ;
@@ -216,6 +218,29 @@ const HomePage = () => {
       .finally(() => {
         setLoading(false);
       });
+  }
+
+  async function callPostDigest() {
+    if(tdNumber){
+      setLoading(true);
+      await axios
+        .post(
+          process.env.REACT_APP_FC_API + "/fastcurate/post_digest",
+          { digest_number: tdNumber },
+          {
+            headers: {
+              Authorization: loginData.token,
+            },
+          }
+        )
+        .then((resp) => {})
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
   }
 
   async function getPost(prev) {
@@ -429,6 +454,8 @@ const HomePage = () => {
             />
           ) : currentMode === 2 ? (
             /* WRITING MODE */
+            <div>
+            <p>{tdNumber}</p>
             <Writing
               updatePosts={updatePosts}
               loading={loading}
@@ -444,8 +471,13 @@ const HomePage = () => {
               setTdIntro={setTdIntro}
               getDigestPreview={getDigestPreview}
               digestPreview={digestPreview}
+              tdNumber={tdNumber}
+              setTdNumber={setTdNumber}
+              callPostDigest={callPostDigest}
               startNewDigest={startNewDigest}
             />
+            </div>
+
           ) : currentMode === 3 ? (
             /* TOOLS MODE */
             <Tools />

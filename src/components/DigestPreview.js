@@ -10,28 +10,54 @@ import "../styles/DigestPreview.scss";
 
 const DigestPreview = (props) => {
   return (
-    <div id="digest-preview">
-      <ReactMarkdown
-        className="post-body"
-        children={props.digestPreview}
-        linkTarget="_blank"
-        disallowedElements={["liketuimages"]}
-        unwrapDisallowed={true}
-        remarkRehypeOptions={{
-          allowDangerousHtml: true,
-        }}
-        remarkPlugins={[remarkGfm, remarkImages]}
-        rehypePlugins={[rehypeRaw, rehypeSanitize(fcSchema), rehypeStringify]}
-      ></ReactMarkdown>
-      <p
-        className="markdown-raw-view"
-        onClick={() => {
-          navigator.clipboard.writeText(props.digestPreview);
-        }}
-      >
-        {props.digestPreview}
-      </p>
+    <div>
+      <div className="writing-buttons">
+        <div>
+          <h2>Digest Number</h2>
+          <input
+            className="intro-textara"
+            value={props.tdNumber !== null ? props.tdNumber : ""}
+            onChange={(e) => {
+              props.setTdNumber(e.target.value);
+            }}
+          />
+        </div>
+        <p
+          className={`preview-digest-button ${props.tdNumber ? '' : 'disabled'}`}
+          data-tip={props.tdNumber ? '' : 'disabled'}
+          onClick={async () => {
+            if (props.tdNumber) {
+              await props.callPostDigest();
+            }
+          }}
+        >
+          Post digest
+        </p>
+      </div>
+      <div id="digest-preview">
+        <ReactMarkdown
+          className="post-body"
+          children={props.digestPreview}
+          linkTarget="_blank"
+          disallowedElements={["liketuimages"]}
+          unwrapDisallowed={true}
+          remarkRehypeOptions={{
+            allowDangerousHtml: true,
+          }}
+          remarkPlugins={[remarkGfm, remarkImages]}
+          rehypePlugins={[rehypeRaw, rehypeSanitize(fcSchema), rehypeStringify]}
+        ></ReactMarkdown>
+        <p
+          className="markdown-raw-view"
+          onClick={() => {
+            navigator.clipboard.writeText(props.digestPreview);
+          }}
+        >
+          {props.digestPreview}
+        </p>
+      </div>
     </div>
+
   );
 };
 
