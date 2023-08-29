@@ -23,16 +23,19 @@ const DigestPreview = (props) => {
           />
         </div>
         <p
-          className={`preview-digest-button ${props.tdNumber ? '' : 'disabled'}`}
-          data-tip={props.tdNumber ? '' : 'disabled'}
+          className={`preview-digest-button ${props.tdNumber && !props.postDigestStatus ? '' : 'disabled'}`}
+          data-tip={props.tdNumber && !props.postDigestStatus ? '' : 'disabled'}
           onClick={async () => {
-            if (props.tdNumber) {
+            if (props.tdNumber && !props.postDigestStatus) {
               await props.callPostDigest();
             }
           }}
         >
           Post digest
         </p>
+      </div>
+      <div className="error-hint-wrapper">
+        <p className="error-hint">{props.postDigestStatus}</p>
       </div>
       <div id="digest-preview">
         <ReactMarkdown

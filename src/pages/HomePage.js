@@ -23,6 +23,7 @@ const HomePage = () => {
   const [digestPreview, setDigestPreview] = useState();
 
   const [tdNumber, setTdNumber] = useState();
+  const [postDigestStatus, setPostDigestStatus] = useState('');
 
   async function updatePostQuality(oldQ, newQ, post) {
     let updatedPost = post;
@@ -233,9 +234,12 @@ const HomePage = () => {
             },
           }
         )
-        .then((resp) => {})
+        .then((resp) => {
+          setPostDigestStatus('Digest Posted successfully!');
+        })
         .catch((err) => {
           console.log(err);
+          setPostDigestStatus('Something went wrong with posting Digest. Please verify is digest is already posted and verify post, comments and votes manually!');
         })
         .finally(() => {
           setLoading(false);
@@ -455,7 +459,6 @@ const HomePage = () => {
           ) : currentMode === 2 ? (
             /* WRITING MODE */
             <div>
-            <p>{tdNumber}</p>
             <Writing
               updatePosts={updatePosts}
               loading={loading}
@@ -472,6 +475,7 @@ const HomePage = () => {
               getDigestPreview={getDigestPreview}
               digestPreview={digestPreview}
               tdNumber={tdNumber}
+              postDigestStatus={postDigestStatus}
               setTdNumber={setTdNumber}
               callPostDigest={callPostDigest}
               startNewDigest={startNewDigest}

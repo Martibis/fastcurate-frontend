@@ -44,6 +44,7 @@ const Curating = (props) => {
             <LoadingPage></LoadingPage>
           </div>
         ) : (
+          <div>
           <ReactMarkdown
             className="post-body"
             children={
@@ -67,8 +68,9 @@ const Curating = (props) => {
               props?.post?.username +
               ") | [View this post on Pinmapple](https://pinmapple.com/p/" +
               props?.post?.postPermLink +
-              ")\n\n" +
-              props?.post?.postBody
+              ")\n\n" 
+              +
+              props?.post?.postBody.replace('br<', 'br><')
             }
             linkTarget="_blank"
             disallowedElements={["liketuimages"]}
@@ -83,6 +85,8 @@ const Curating = (props) => {
               rehypeStringify,
             ]}
           ></ReactMarkdown>
+            </div>
+
         )}
       </div>
       <div className="rate-post">

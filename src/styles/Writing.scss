@@ -13,7 +13,7 @@
         align-items: center;
         justify-content: space-between;
         box-sizing: border-box;
-        margin: 1rem 0;
+        margin: 1rem auto;
     }
     .error-hint-wrapper{
         display: flex;
@@ -21,6 +21,7 @@
         justify-content: start;
         width: 90%;
         max-width: calc(750px);
+        margin: auto;
         margin-bottom: 30px;
         .error-hint{
             color: red;

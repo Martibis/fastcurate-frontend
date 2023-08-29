@@ -55,7 +55,7 @@ const Writing = (props) => {
         <p className="error-hint">To preview digest make sure intro is filled and top 3 posts are selected!</p>
       </div>
       {previewDigest ? (
-        <DigestPreview digestPreview={props.digestPreview} tdNumber={props.tdNumber} setTdNumber={props.setTdNumber} callPostDigest={props.callPostDigest}/>
+        <DigestPreview digestPreview={props.digestPreview} tdNumber={props.tdNumber} postDigestStatus={props.postDigestStatus} setTdNumber={props.setTdNumber} callPostDigest={props.callPostDigest}/>
       ) : (
         <div className="inner-writing">
           <h2>Intro</h2>
