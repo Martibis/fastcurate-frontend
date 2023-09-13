@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { fcSchema } from "../helpers/Schema";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -9,6 +9,16 @@ import rehypeStringify from "rehype-stringify";
 import "../styles/DigestPreview.scss";
 
 const DigestPreview = (props) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handlePostDigestClick = async () => {
+    if (props.tdNumber && !props.postDigestStatus && !isLoading) {
+      setIsLoading(true);
+      await props.callPostDigest();
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div>
       <div className="writing-buttons">
@@ -23,15 +33,11 @@ const DigestPreview = (props) => {
           />
         </div>
         <p
-          className={`preview-digest-button ${props.tdNumber && !props.postDigestStatus ? '' : 'disabled'}`}
-          data-tip={props.tdNumber && !props.postDigestStatus ? '' : 'disabled'}
-          onClick={async () => {
-            if (props.tdNumber && !props.postDigestStatus) {
-              await props.callPostDigest();
-            }
-          }}
+          className={`preview-digest-button ${!props.tdNumber || props.postDigestStatus || isLoading ? 'disabled' : ''}`}
+          data-tip={!props.tdNumber || props.postDigestStatus || isLoading ? 'disabled' : ''}
+          onClick={handlePostDigestClick}
         >
-          Post digest
+          {isLoading ? <span className="loader"></span> : null} Post digest
         </p>
       </div>
       <div className="error-hint-wrapper">
