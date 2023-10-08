@@ -235,7 +235,11 @@ const HomePage = () => {
           }
         )
         .then((resp) => {
-          setPostDigestStatus('Digest Posted successfully!');
+          if(resp.data.data){
+            setPostDigestStatus('Digest Posted successfully!');
+          }else{
+            setPostDigestStatus(resp.data.msg);
+          }
         })
         .catch((err) => {
           console.log(err);
